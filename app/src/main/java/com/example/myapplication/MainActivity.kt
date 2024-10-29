@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var addButton: Button
-    private val adapter = RectanglesAdapter()
+    private lateinit var adapter: RectanglesAdapter
 
     private val viewModel: RectanglesViewModel by viewModels()
 
@@ -28,13 +28,15 @@ class MainActivity : AppCompatActivity() {
         init()
 
         addButton.setOnClickListener {
-            viewModel.addItem()
+            val nextElement = viewModel.items.lastOrNull()?.let { it + 1 } ?: 0
+            viewModel.addItem(nextElement)
             adapter.setItems(viewModel.items)
             Log.d("MainActivity", "Item added, total items: ${viewModel.items.size}")
         }
     }
 
     private fun init() {
+        adapter = RectanglesAdapter(viewModel)
         adapter.setItems(viewModel.items)
 
         addButton =

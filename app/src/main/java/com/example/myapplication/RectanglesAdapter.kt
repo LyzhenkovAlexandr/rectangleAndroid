@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RectanglesAdapter : RecyclerView.Adapter<RectanglesAdapter.ViewHolder>() {
+class RectanglesAdapter(
+    private val viewModel: RectanglesViewModel
+) : RecyclerView.Adapter<RectanglesAdapter.ViewHolder>() {
 
     private val items = mutableListOf<Int>()
 
@@ -21,6 +23,12 @@ class RectanglesAdapter : RecyclerView.Adapter<RectanglesAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.fillView("Item $item", if (position % 2 == 0) Color.RED else Color.BLUE)
+        holder.itemView.setOnClickListener {
+            items.removeAt(position)
+            viewModel.delete(item)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, items.size)
+        }
     }
 
     override fun getItemCount(): Int = items.size
